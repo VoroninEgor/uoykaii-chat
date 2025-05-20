@@ -1,83 +1,97 @@
-# ChatApp  #
+# Django Chat Application
 
-![](http://g.recordit.co/JYruQDLd0h.gif)
+A real-time chat application built with Django, PostgreSQL, and Redis. This application provides a modern messaging platform with real-time updates using WebSocket connections.
 
-A small functional person-to-person message center application built using Django.
-It has a REST API and uses WebSockets to notify clients of new messages and 
-avoid polling.
+## Features
 
-## Architecture ##
- - When a user logs in, the frontend downloads the user list and opens a
-   Websocket connection to the server (notifications channel).
- - When a user selects another user to chat, the frontend downloads the latest
-   15 messages (see settings) they've exchanged.
- - When a user sends a message, the frontend sends a POST to the REST API, then
-   Django saves the message and notifies the users involved using the Websocket
-   connection (sends the new message ID).
- - When the frontend receives a new message notification (with the message ID),
-   it performs a GET query to the API to download the received message.
+- Real-time messaging using WebSocket
+- User authentication and authorization
+- Message history
+- Online user status
+- Modern and responsive UI
+- Docker support for easy deployment
 
-## Scaling ##
+## Tech Stack
 
-### Requests ###
-"Because Channels takes Django into a multi-process model, you no longer run 
-everything in one process along with a WSGI server (of course, you’re still 
-free to do that if you don’t want to use Channels). Instead, you run one or 
-more interface servers, and one or more worker servers, connected by that 
-channel layer you configured earlier."
+- **Backend**: Django 3.1
+- **Database**: PostgreSQL 13
+- **Cache/Messaging**: Redis 6
+- **WebSocket**: Django Channels
+- **Containerization**: Docker & Docker Compose
 
-In this case, I'm using the In-Memory channel system, but could be changed to
-the Redis backend to improve performance and spawn multiple workers in a
-distributed environment.
+## Prerequisites
 
-Please take a look at the link below for more information:
-https://channels.readthedocs.io/en/latest/introduction.html
+- Docker and Docker Compose
+- Git
 
-## Run ##
+## Installation
 
-0. move to project root folder
-
-
-1. Create and activate a virtualenv (Python 3)
+1. Clone the repository:
 ```bash
-pipenv --python 3 shell
+git clone https://github.com/VoroninEgor/uoykaii-chat.git
+cd uoykaii-chat
 ```
-2. Install requirements
+
+2. Build and start the containers:
 ```bash
+docker-compose up --build
+```
+
+The application will be available at `http://localhost:8000`
+
+## Development Setup
+
+1. Create and activate a virtual environment:
+```bash
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+```
+
+2. Install dependencies:
+```bash
+pip install pipenv
 pipenv install
 ```
-3. Create a MySQL database
-```sql
-CREATE DATABASE chat CHARACTER SET utf8;
-```
-4. Start Redis Server
+
+3. Run migrations:
 ```bash
-redis-server
+python manage.py migrate
 ```
 
-5. Init database
+4. Start the development server:
 ```bash
-./manage.py migrate
-```
-6. Run tests
-```bash
-./manage.py test
+python manage.py runserver
 ```
 
-7. Create admin user
-```bash
-./manage.py createsuperuser
-```
+## Docker Services
 
-8. Run development server
-```bash
-./manage.py runserver
-```
+The application consists of three main services:
 
-To override default settings, create a local_settings.py file in the chat folder.
+- **Web**: Django application server
+- **PostgreSQL**: Database server
+- **Redis**: Cache and message broker
 
-Message prefetch config (load last n messages):
-```python
-MESSAGES_TO_LOAD = 15
-```
-# uoykaii-chat
+## Environment Variables
+
+The following environment variables are used in the application:
+
+- `POSTGRES_DB`: Database name (default: chat)
+- `POSTGRES_USER`: Database user (default: postgres)
+- `POSTGRES_PASSWORD`: Database password
+- `REDIS_URL`: Redis connection URL
+
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Author
+
+Egor Voronin

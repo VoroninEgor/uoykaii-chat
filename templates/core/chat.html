@@ -1,49 +1,55 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block main %}
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/chat.css' %}" type="text/css"/>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+{% endblock %}
 
-    <div class="container">
-        <div class="page-header">
-            <h1>Welcome to ChatApp
-                <small>Pick a user and start chatting!</small>
-            </h1>
-        </div>
-        <div class="row">
-            <div class="col-md-4">
-                <div id="user-list" class="list-group">
-                    <a href="" class="list-group-item disabled">
-                        <h4 class="list-group-item-heading">Users</h4>
-                        {# Users go here #}
+{% block content %}
+    <div class="chat-container">
+        <div class="chat-sidebar">
+            <div class="sidebar-header">
+                <h2>Пользователи</h2>
+                <div class="user-info">
+                    <span class="current-user">{{ request.user.username }}</span>
+                    <a href="{% url 'logout' %}" class="logout-button">
+                        <svg viewBox="0 0 24 24" width="24" height="24">
+                            <path fill="currentColor" d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/>
+                        </svg>
                     </a>
                 </div>
             </div>
-            <div class="col-md-8">
-                <div class="panel panel-info">
-                    <div class="panel-heading">
-                        <h4 class="panel-title">Chat</h4>
-                    </div>
-                    <div>
-                        <ul id="messages" class="messages">
-                            {# Messages go here #}
-                        </ul>
-                    </div>
-                    <div class="panel-footer">
-                        <div class="input-group">
-                            <input id="chat-input" type="text"
-                                   class="form-control input"
-                                   placeholder="Type your message here ..."
-                                   maxlength="500">
-                            <span class="input-group-btn">
-                            <button class="btn btn-info btn"
-                                    id="btn-send">
-                                Send</button>
-                        </span>
-                        </div>
-                    </div>
+            <div id="user-list" class="user-list">
+                {# Users go here #}
+            </div>
+        </div>
+        
+        <div class="chat-main">
+            <div class="chat-header">
+                <div class="current-chat-info">
+                    <h3 id="current-chat-title">Выберите собеседника</h3>
                 </div>
-
-
+            </div>
+            
+            <div class="messages-container">
+                <ul id="messages" class="messages">
+                    {# Messages go here #}
+                </ul>
+            </div>
+            
+            <div class="chat-input-container">
+                <div class="input-wrapper">
+                    <input id="chat-input" type="text"
+                           class="chat-input"
+                           placeholder="Введите сообщение..."
+                           maxlength="500">
+                    <button class="send-button" id="btn-send">
+                        <svg viewBox="0 0 24 24" width="24" height="24">
+                            <path fill="currentColor" d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"></path>
+                        </svg>
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -53,5 +59,4 @@
         let currentUser = '{{ request.user.username }}';
     </script>
     <script src="{% static 'js/app.js' %}"></script>
-
 {% endblock %}
